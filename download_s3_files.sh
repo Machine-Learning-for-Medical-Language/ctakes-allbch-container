@@ -8,6 +8,9 @@ s3_input_path=`$aws ec2 describe-tags --filters Name=key,Values=s3_in | jq --raw
 
 $aws s3 cp --recursive s3://${s3_bucket}/${s3_input_path} /data/
 
+# Don't enter the loop if the glob doesn't find files
+shopt -s nullglob
+
 cd /data
 for fn in *.csv*encrypted; do
   of=${fn%%.*}.csv
