@@ -37,6 +37,9 @@ def worker(url, input_queue, output_queue):
 
         output_queue.put( (output, output_fn, text) )
 
+def encode(my_str):
+    return my_str.encode('utf-8')
+
 def write_worker(num_jobs, done_queue):
     # num_jobs is our intended number of jobs but if the DB doens't have that many
     # rows then we'll never get there. Instead just wait for the signal.
@@ -69,8 +72,8 @@ def write_worker(num_jobs, done_queue):
                                     tui = concept['tui']
                                     sem_type_path = tui_to_path[tui]
                                     full_path = '/'.join([sem_type_path, pt]).replace(' ', '_')
-                                    
-                                    writer.writerow([pt_num, full_path, pt, polarity, start_date])
+                                    row = [pt_num, full_path, pt, polarity, start_date] 
+                                    writer.writerow([encode(row_item) for row_item in row])
 
             # update progress bar every time even if the output was bad
             pbar.update()
