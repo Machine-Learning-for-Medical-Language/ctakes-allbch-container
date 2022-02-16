@@ -55,6 +55,7 @@ def write_worker(num_jobs, done_queue):
 
                 with open(output_fn, 'wt') as of:
                     of.write(json.dumps(output))
+                    of.write('\n')
 
                 output_fn = output_fn.replace('.json', '.csv')
                 with open(output_fn, 'wt') as of:
@@ -62,6 +63,7 @@ def write_worker(num_jobs, done_queue):
                     metadata = output['metadata']
                     pt_num = metadata['PATIENT_NUM']
                     start_date = metadata['START_DATE']
+                    inst_num = metadata['INSTANCE_NUM']
                     for sem_type in output.keys():
                         for ent in output[sem_type]:
                             if 'ontologyConceptArr' in ent:
@@ -72,7 +74,7 @@ def write_worker(num_jobs, done_queue):
                                     tui = concept['tui']
                                     sem_type_path = tui_to_path[tui]
                                     full_path = '/'.join([sem_type_path, pt]).replace(' ', '_')
-                                    row = [pt_num, full_path, pt, polarity, start_date] 
+                                    row = [pt_num, inst_num, full_path, pt, polarity, start_date] 
                                     writer.writerow([encode(row_item) for row_item in row])
 
             # update progress bar every time even if the output was bad
