@@ -3,6 +3,7 @@ import json
 import os
 from os.path import join
 import sys
+import ctypes as ct
 
 def main(args):
     if len(args) < 2:
@@ -14,6 +15,8 @@ def main(args):
     if not out_dir[0] == '/':
         sys.stderr.write('Output directory argument must be an absolute path! (must begin with /)\n')
         sys.exit(-1)
+
+    csv.field_size_limit(int(ct.c_ulong(-1).value // 2))
 
     for fn in os.listdir(in_dir):
         if not fn.endswith('.csv'):
